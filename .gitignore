@@ -1,0 +1,7 @@
+commerce-cache/target/
+commerce-stream/target/
+/.metadata/
+*.classpath
+*.project
+commerce-cache/.settings/
+commerce-stream/.settings/
