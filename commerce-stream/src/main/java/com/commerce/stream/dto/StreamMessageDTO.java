@@ -1,19 +1,19 @@
-package com.commerce.stream.domain;
+package com.commerce.stream.dto;
 
 import java.time.Instant;
 
-public class StreamMessage<T> {
+public class StreamMessageDTO<T> {
 	
-	private final TrackInfo trackInfo;
+	private final TrackInfoDTO trackInfo;
 
 	private T message;
 	
-	public StreamMessage() {
+	public StreamMessageDTO() {
 		super();
-		this.trackInfo = new TrackInfo(Instant.now());
+		this.trackInfo = new TrackInfoDTO(Instant.now());
 	}
 	
-	public StreamMessage(TrackInfo trackInfo) {
+	public StreamMessageDTO(TrackInfoDTO trackInfo) {
 		super();
 		this.trackInfo = trackInfo;
 	}
@@ -26,7 +26,7 @@ public class StreamMessage<T> {
 		this.message = message;
 	}
 
-	public TrackInfo getTrackInfo() {
+	public TrackInfoDTO getTrackInfo() {
 		return trackInfo;
 	}
 

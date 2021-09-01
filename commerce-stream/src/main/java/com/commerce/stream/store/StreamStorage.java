@@ -1,6 +1,6 @@
 package com.commerce.stream.store;
 
-public interface StreamStores<T> {
+public interface StreamStorage<T> {
 	
 	public T get(String key, Class<T> clz);
 		

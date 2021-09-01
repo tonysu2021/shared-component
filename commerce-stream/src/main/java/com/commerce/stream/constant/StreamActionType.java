@@ -1,4 +1,4 @@
-package com.commerce.stream.domain;
+package com.commerce.stream.constant;
 
 import java.util.Arrays;
 import java.util.HashMap;

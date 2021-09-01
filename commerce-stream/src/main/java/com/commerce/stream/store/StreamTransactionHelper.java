@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.commerce.stream.constant.StatusCode;
-import com.commerce.stream.domain.StreamActionType;
+import com.commerce.stream.constant.StreamActionType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,13 +16,13 @@ public class StreamTransactionHelper<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StreamTransactionHelper.class);
 
-	private StreamStores<StreamRecord> streamStores;
+	private StreamStorage<StreamRecordPO> streamStorage;
 
 	private ObjectMapper mapper;
 	
-	public StreamTransactionHelper(StreamStores<StreamRecord> streamStores, ObjectMapper mapper) {
+	public StreamTransactionHelper(StreamStorage<StreamRecordPO> streamStorage, ObjectMapper mapper) {
 		super();
-		this.streamStores = streamStores;
+		this.streamStorage = streamStorage;
 		this.mapper = mapper;
 	}
 	
@@ -34,7 +34,7 @@ public class StreamTransactionHelper<T> {
 
 		String msgId = messageId.toString();
 		String cacheKey = generateKey(target, msgId, type.getCode());
-		StreamRecord oldRecord = streamStores.get(cacheKey, StreamRecord.class);
+		StreamRecordPO oldRecord = streamStorage.get(cacheKey, StreamRecordPO.class);
 
 		if (oldRecord != null && StatusCode.SUCCESS == oldRecord.getStatus()) {
 			LOGGER.info("Repeated messages were found. ");
@@ -45,7 +45,7 @@ public class StreamTransactionHelper<T> {
 			return;
 		}
 
-		StreamRecord newRecord = oldRecord != null ? updateOldRecord(oldRecord, attempt)
+		StreamRecordPO newRecord = oldRecord != null ? updateOldRecord(oldRecord, attempt)
 				: createNewRecord(messageId, attempt, payload);
 		try {
 			consumer.accept(payload);	
@@ -54,7 +54,7 @@ public class StreamTransactionHelper<T> {
 			newRecord.setStatus(StatusCode.FAILURE);
 			throw ex;
 		} finally {
-			streamStores.save(cacheKey, newRecord);
+			streamStorage.save(cacheKey, newRecord);
 		}
 	}
 
@@ -62,14 +62,14 @@ public class StreamTransactionHelper<T> {
 		return String.format("%s-%s-%s",target, msgId, type);
 	}
 
-	private StreamRecord updateOldRecord(StreamRecord oldRecord, int attempt) {
+	private StreamRecordPO updateOldRecord(StreamRecordPO oldRecord, int attempt) {
 		oldRecord.setRetryTime(attempt);
 		oldRecord.setModifyTime(Instant.now());
 		return oldRecord;
 	}
 
-	private StreamRecord createNewRecord(UUID messageId, int attempt, T payload) {
-		StreamRecord newRecord = new StreamRecord();
+	private StreamRecordPO createNewRecord(UUID messageId, int attempt, T payload) {
+		StreamRecordPO newRecord = new StreamRecordPO();
 		newRecord.setMessageId(messageId);
 		try {
 			newRecord.setMessage(mapper.writeValueAsString(payload));

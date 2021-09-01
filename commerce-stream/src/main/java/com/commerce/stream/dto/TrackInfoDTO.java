@@ -1,18 +1,18 @@
-package com.commerce.stream.domain;
+package com.commerce.stream.dto;
 
 import java.time.Instant;
 
-public class TrackInfo {
+public class TrackInfoDTO {
 	protected final Instant source;
 
 	protected Instant destination;
 	
-	public TrackInfo() {
+	public TrackInfoDTO() {
 		super();
 		this.source = Instant.now();
 	}
 
-	public TrackInfo(Instant source) {
+	public TrackInfoDTO(Instant source) {
 		super();
 		this.source = source;
 	}

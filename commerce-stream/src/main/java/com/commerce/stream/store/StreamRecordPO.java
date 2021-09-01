@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.commerce.stream.constant.StatusCode;
 
-public class StreamRecord {
+public class StreamRecordPO {
 
 	private UUID messageId;
 
