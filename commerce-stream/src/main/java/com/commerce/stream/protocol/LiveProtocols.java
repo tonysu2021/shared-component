@@ -13,4 +13,10 @@ public interface LiveProtocols {
 
 	@Output(LiveChannel.WS_BROADCAST_OUTPUT)
 	MessageChannel outboundWSBroadcast();
+	
+	@Input(LiveChannel.EVENT_BROADCAST_INPUT)
+	SubscribableChannel inboundEventBroadcast();
+
+	@Output(LiveChannel.EVENT_BROADCAST_OUTPUT)
+	MessageChannel outboundEventBroadcast();
 }
